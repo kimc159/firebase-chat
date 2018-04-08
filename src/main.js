@@ -6,6 +6,7 @@ import router from './router'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 import * as firebase from 'firebase'
+import { store } from './store'
 
 Vue.use(Vuetify)
 
@@ -17,6 +18,7 @@ new Vue({
   router,
   components: { App },
   template: '<App/>',
+  store,
   created () {
     var config = {
       apiKey: 'AIzaSyDN9FtpQV0M20d35CCv7syNXDdtAPlcfIg',
