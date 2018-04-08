@@ -6,19 +6,29 @@ Vue.use(Vuex)
 
 export const store = new Vuex.Store({
   state: {
+    user: '',
     error: null
   },
   mutations: {
     setError (state, payload) {
       state.error = payload
+    },
+    setUser (state, payload) {
+      state.user = payload
     }
   },
   actions: {
     signup (context, payload) {
+      const setUser = {
+        name: payload.name,
+        email: payload.email
+      }
       firebase.auth().createUserAndRetrieveDataWithEmailAndPassword(payload.email, payload.password)
       .then((user) => {
         console.log('가입 성공')
         console.log('user : ' + JSON.stringify(user))
+        alert('가입이 완료되었습니다.')
+        context.commit('setUser', setUser)
       })
       .catch((error) => {
         console.log('가입 실패')
@@ -51,6 +61,9 @@ export const store = new Vuex.Store({
     }
   },
   getters: {
+    user (state) {
+      return state.user
+    },
     error (state) {
       return state.error
     }
