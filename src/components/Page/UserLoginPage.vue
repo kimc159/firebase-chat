@@ -33,17 +33,19 @@
     <v-flex xs12>
       <div class="btn_wrap facebook">
         <v-btn large center>
-          <span></span>
-          페이스북으로 로그인</v-btn>
+          <v-icon></v-icon>
+          페이스북으로 로그인
+        </v-btn>
       </div>
     </v-flex>
   </v-layout>
   <v-layout row wrap>
     <v-flex xs12>
       <div class="btn_wrap google">
-        <v-btn large class="white" center>
+        <v-btn large class="white" center @click="googleLogin">
           <v-icon></v-icon>
-          구글계정으로 로그인</v-btn>
+          구글계정으로 로그인
+        </v-btn>
       </div>
     </v-flex>
   </v-layout>
@@ -63,6 +65,30 @@
   </v-layout>
 </v-container>
 </template>
+<script>
+import * as firebase from 'firebase'
+
+export default {
+  data () {
+    return {
+      auth: firebase.auth()
+    }
+  },
+  methods: {
+    googleLogin () {
+      const googleProvider = new firebase.auth.GoogleAuthProvider()
+      this.auth.signInWithPopup(googleProvider)
+      .then((result) => {
+        console.log('로그인 성공')
+      })
+      .catch((error) => {
+        alert('로그인에 실패했습니다.')
+        console.error('구글 로그인 에러 과정', error)
+      })
+    }
+  }
+}
+</script>
 
 <style lang="scss">
 .logo_wrap {
@@ -85,10 +111,28 @@
   color: #7c8288;
   border: 1px solid #dadce0;
   background: white;
+  i {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    width: 20px;
+    height: 20px;
+    background: url('../../../static/image/icon_google.svg') 50% no-repeat;
+    border-radius: 50%;
+  }
 }
 .facebook .btn__content {
+  position: relative;
   color: white;
   background: #3b5998;
+  i {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    width: 20px;
+    height: 20px;
+    background: url('../../../static/image/icon_facebook.png') 50% no-repeat;
+  }
 }
 .input-group--text-field {
   margin-top: -10px;
