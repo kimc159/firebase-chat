@@ -7,10 +7,12 @@ import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 import * as firebase from 'firebase'
 import { store } from './store'
+import Alert from './components/Shared/Alert'
 
 Vue.use(Vuetify)
 
 Vue.config.productionTip = false
+Vue.component('app-alert', Alert)
 
 /* eslint-disable no-new */
 new Vue({
