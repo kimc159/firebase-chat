@@ -32,7 +32,7 @@
   <v-layout row wrap>
     <v-flex xs12>
       <div class="btn_wrap facebook">
-        <v-btn large center>
+        <v-btn large center @click="facebookLogin">
           <v-icon></v-icon>
           페이스북으로 로그인
         </v-btn>
@@ -74,16 +74,39 @@ export default {
       auth: firebase.auth()
     }
   },
+  created () {
+  },
+  computed: {
+  },
   methods: {
     googleLogin () {
       const googleProvider = new firebase.auth.GoogleAuthProvider()
       this.auth.signInWithPopup(googleProvider)
       .then((result) => {
         console.log('로그인 성공')
+        console.log(result)
+        this.$store.dispatch('setUser')
       })
       .catch((error) => {
         alert('로그인에 실패했습니다.')
         console.error('구글 로그인 에러 과정', error)
+      })
+    },
+    facebookLogin () {
+      const firebaseProvider = new firebase.auth.FacebookAuthProvider()
+      this.auth.signInWithPopup(firebaseProvider)
+      .then((result) => {
+        console.log('로그인 성공')
+        console.log(result)
+      })
+    },
+    onAuthChange () {
+      this.auth.onAuthStateChanged((user) => {
+        if (user) {
+          console.log('user 로그인 : ', JSON.stringify(user))
+        } else {
+          console.log('로그아웃')
+        }
       })
     }
   }
