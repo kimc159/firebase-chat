@@ -56,9 +56,17 @@
                   </v-flex>
                 </v-layout>
                 <v-layout row>
-                  <v-flex xs12>
+                  <v-flex xs6>
                     <v-btn type="submit" :disalbed="loading" :loading="loading">
                       Sign up
+                      <span slot="loader" class="custom-loader">
+                        <v-icon light>cached</v-icon>
+                      </span>
+                    </v-btn>
+                  </v-flex>
+                  <v-flex>
+                    <v-btn type="button" to="/" :disalbed="loading" :loading="loading">
+                      뒤로가기
                       <span slot="loader" class="custom-loader">
                         <v-icon light>cached</v-icon>
                       </span>
@@ -117,7 +125,6 @@ export default {
         email: this.email,
         password: this.password
       }
-      console.log(user)
       this.$store.dispatch('signup', user)
     },
     onDismissed () {
