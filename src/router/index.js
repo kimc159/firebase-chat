@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import ChatListPage from '@/components/Page/ChatListPage'
 import SettingPage from '@/components/Page/SettingPage'
 import UserLoginPage from '@/components/Page/UserLoginPage'
+import Signup from '@/components/User/Signup'
 
 Vue.use(Router)
 
@@ -22,6 +23,11 @@ export default new Router({
       path: '/setting',
       name: 'SettingPage',
       component: SettingPage
+    },
+    {
+      path: '/signup',
+      name: 'Signup',
+      component: Signup
     }
   ]
 })
