@@ -7,13 +7,16 @@
   </v-layout>
   <v-layout row>
     <v-flex xs4>
-      <v-subheader>ID</v-subheader>
+      <v-subheader>email</v-subheader>
     </v-flex>
     <v-flex xs8>
       <v-text-field
-        name="input-1"
-        label="Label Text"
-        id="testing"
+        name="email"
+        label="Email"
+        id="email"
+        v-model="email"
+        type="email"
+        required
       ></v-text-field>
     </v-flex>
   </v-layout>
@@ -23,9 +26,12 @@
     </v-flex>
     <v-flex xs8>
       <v-text-field
-        name="input-1"
-        label="Label Text"
-        id="testing"
+        name="password"
+        label="Password"
+        id="password"
+        v-model="password"
+        type="password"
+        required
       ></v-text-field>
     </v-flex>
   </v-layout>
@@ -52,14 +58,14 @@
   <v-layout row wrap>
     <v-flex xs12>
       <div class="btn_wrap">
-        <v-btn large class="primary" center>이메일로 로그인</v-btn>
+        <v-btn large class="primary" center @click="signin">이메일로 로그인</v-btn>
       </div>
     </v-flex>
   </v-layout>
   <v-layout row wrap>
     <v-flex xs12>
       <div class="btn_wrap">
-        <v-btn large class="primary" center>이메일로 회원가입</v-btn>
+        <v-btn large class="primary" center to="/signup">이메일로 회원가입</v-btn>
       </div>
     </v-flex>
   </v-layout>
@@ -71,21 +77,36 @@ import * as firebase from 'firebase'
 export default {
   data () {
     return {
-      auth: firebase.auth()
+      auth: firebase.auth(),
+      email: '',
+      password: ''
     }
   },
-  created () {
-  },
   computed: {
+    user () {
+      return this.$store.getters.user
+    }
+  },
+  watch: {
+    user (value) {
+      if (value !== null && value !== undefined) {
+        console.log(value)
+        this.$router.push('/chatlist')
+      }
+    }
   },
   methods: {
     googleLogin () {
       const googleProvider = new firebase.auth.GoogleAuthProvider()
       this.auth.signInWithPopup(googleProvider)
       .then((result) => {
-        console.log('로그인 성공')
-        console.log(result)
-        this.$store.dispatch('setUser')
+        console.log('google login')
+        const setUser = {
+          name: result.user.displayName,
+          email: result.user.email
+        }
+        this.$store.dispatch('setUser', setUser)
+        this.$store.dispatch('setError', null)
       })
       .catch((error) => {
         alert('로그인에 실패했습니다.')
@@ -96,18 +117,21 @@ export default {
       const firebaseProvider = new firebase.auth.FacebookAuthProvider()
       this.auth.signInWithPopup(firebaseProvider)
       .then((result) => {
-        console.log('로그인 성공')
-        console.log(result)
+        console.log('facebook login')
+        const setUser = {
+          name: result.user.displayName,
+          email: result.user.email
+        }
+        this.$store.dispatch('setUser', setUser)
+        this.$store.dispatch('setError', null)
       })
     },
-    onAuthChange () {
-      this.auth.onAuthStateChanged((user) => {
-        if (user) {
-          console.log('user 로그인 : ', JSON.stringify(user))
-        } else {
-          console.log('로그아웃')
-        }
-      })
+    signin () {
+      const user = {
+        email: this.email,
+        password: this.password
+      }
+      this.$store.dispatch('signin', user)
     }
   }
 }
@@ -126,8 +150,9 @@ export default {
 }
 .btn_wrap {
   text-align: center;
-  button {
+  button, .btn{
     width: 100%;
+    margin-top: 10px;
   }
 }
 .google .btn__content {
