@@ -18,21 +18,44 @@ export const store = new Vuex.Store({
     }
   },
   actions: {
+    signin (context, payload) {
+      firebase.auth().signInWithEmailAndPassword(payload.email, payload.password)
+      .then((user) => {
+        const setUser = {
+          name: user.displayName,
+          email: user.email
+        }
+        context.commit('setUser', setUser)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+    },
     signup (context, payload) {
-      const setUser = {
-        name: payload.name,
-        email: payload.email
-      }
       firebase.auth().createUserAndRetrieveDataWithEmailAndPassword(payload.email, payload.password)
       .then((user) => {
-        console.log('가입 성공')
-        console.log('user : ' + JSON.stringify(user))
-        alert('가입이 완료되었습니다.')
-        context.commit('setUser', setUser)
+        const nameUpdate = function () {
+          firebase.auth().currentUser.updateProfile({
+            displayName: payload.name
+          })
+          .then(() => {
+            console.log('displayName update success')
+            const setUser = {
+              name: payload.name,
+              emila: payload.email
+            }
+            context.commit('setUser', setUser)
+          })
+          .catch(error => {
+            console.log(error)
+          })
+        }
+        nameUpdate()
       })
       .catch((error) => {
         console.log('가입 실패')
         console.log('error : ' + error)
+        context.commit('setUser', null)
         let errorMessage
         switch (error.code) {
           case 'auth/email-already-in-use':
@@ -48,10 +71,19 @@ export const store = new Vuex.Store({
             errorMessage = '비밀번호는 6자리 이상 필요합니다'
             break
         }
-        console.log(error)
-        console.log(errorMessage)
         context.commit('setError', errorMessage)
       })
+    },
+    setUser (context, payload) {
+      const setUser = {
+        name: payload.name,
+        email: payload.email
+      }
+      context.commit('setUser', setUser)
+    },
+    signout (context) {
+      firebase.auth().signOut()
+      context.commit('setUser', null)
     },
     setError (context, payload) {
       context.commit('setError', payload)
