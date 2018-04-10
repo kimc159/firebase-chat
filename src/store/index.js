@@ -8,11 +8,15 @@ export const store = new Vuex.Store({
   state: {
     user: '',
     userList: '',
+    chatRoomIn: false,
     error: null
   },
   mutations: {
     userList (state, payload) {
       state.userList = payload
+    },
+    chatRoomIn (state, payload) {
+      state.chatRoomIn = payload
     },
     setUser (state, payload) {
       state.user = payload
@@ -99,7 +103,8 @@ export const store = new Vuex.Store({
         for (let key in obj) {
           users.push({
             name: obj[key].name,
-            profile: obj[key].profile
+            profile: obj[key].profile,
+            uid: obj[key].uid
           })
         }
         context.commit('userList', users)
@@ -119,6 +124,9 @@ export const store = new Vuex.Store({
       // .catch((error) => {
       //   console.log(error)
       // })
+    },
+    chatRoomIn (context, payload) {
+      context.commit('chatRoomIn', payload)
     },
     setUser (context, payload) {
       const setUser = {
@@ -141,6 +149,9 @@ export const store = new Vuex.Store({
   getters: {
     userList (state) {
       return state.userList
+    },
+    chatRoomIn (state) {
+      return state.chatRoomIn
     },
     user (state) {
       return state.user

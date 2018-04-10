@@ -5,6 +5,7 @@ import ChatListPage from '@/components/Page/ChatListPage'
 import SettingPage from '@/components/Page/SettingPage'
 import UserLoginPage from '@/components/Page/UserLoginPage'
 import Signup from '@/components/User/Signup'
+import ChatRoom from '@/components/Room/ChatRoom'
 
 Vue.use(Router)
 
@@ -34,6 +35,12 @@ export default new Router({
       path: '/signup',
       name: 'Signup',
       component: Signup
+    },
+    {
+      path: '/room/:id',
+      props: true,
+      name: 'ChatRoom',
+      component: ChatRoom
     }
   ]
 })

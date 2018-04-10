@@ -1,12 +1,12 @@
 <template>
   <v-app>
-    <v-toolbar class="text-xs-center" dark color="teal lighten-3" v-if="user">
+    <v-toolbar class="text-xs-center" dark color="teal lighten-3" v-if="user && !chatRoomIn">
       <v-toolbar-title class="white--text">firebase chat</v-toolbar-title>
     </v-toolbar>
     <v-content>
       <router-view></router-view>
     </v-content>
-    <v-tabs icons-and-text centered dark color="teal lighten-3" v-if="user">
+    <v-tabs icons-and-text centered dark color="teal lighten-3" v-if="user && !chatRoomIn">
       <v-tabs-slider color="yellow"></v-tabs-slider>
       <v-tab href="#tab-1" to="/userlist" @click="userIsAuth = true">
         <v-icon class="mr-2">person</v-icon>
@@ -26,7 +26,6 @@
 
 <script>
 
-
 export default {
   data () {
     return {
@@ -39,6 +38,9 @@ export default {
   computed: {
     user () {
       return this.$store.getters.user
+    },
+    chatRoomIn () {
+      return this.$store.getters.chatRoomIn
     }
   }
 }
@@ -55,7 +57,6 @@ export default {
   }
   .content {
     position: absolute;
-    top: 56px;
     width: 100%;
     height: 100%;
     .subheader {
