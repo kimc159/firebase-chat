@@ -109,7 +109,7 @@ export default {
   watch: {
     user (value) {
       if (value !== null && value !== undefined) {
-        this.$router.push('/')
+        this.$router.push('/chatlist')
       }
     }
   },
@@ -123,7 +123,8 @@ export default {
       const user = {
         name: this.name,
         email: this.email,
-        password: this.password
+        password: this.password,
+        profile: '/static/image/noprofile.png'
       }
       this.$store.dispatch('signup', user)
     },
