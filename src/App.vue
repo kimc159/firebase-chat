@@ -26,6 +26,7 @@
 
 <script>
 
+
 export default {
   data () {
     return {
@@ -44,15 +45,32 @@ export default {
 </script>
 
 <style lang="scss">
+  .toolbar {
+    position: absolute;
+    top: 0;
+    z-index: 10;
+  }
   .toolbar__content .toolbar__title {
     margin: 0 auto;
   }
   .content {
+    position: absolute;
+    top: 56px;
     width: 100%;
-    height: auto;
+    height: 100%;
+    .subheader {
+      padding: 10px;
+    }
   }
-  .tabs .tabs__div {
-    width: 50%;
+  .tabs {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    z-index: 10;
+    .tabs__div {
+      width: 50%;
+    }
   }
 </style>
 
