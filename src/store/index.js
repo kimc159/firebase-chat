@@ -7,14 +7,18 @@ Vue.use(Vuex)
 export const store = new Vuex.Store({
   state: {
     user: '',
+    userList: '',
     error: null
   },
   mutations: {
-    setError (state, payload) {
-      state.error = payload
+    userList (state, payload) {
+      state.userList = payload
     },
     setUser (state, payload) {
       state.user = payload
+    },
+    setError (state, payload) {
+      state.error = payload
     }
   },
   actions: {
@@ -42,9 +46,22 @@ export const store = new Vuex.Store({
             console.log('displayName update success')
             const setUser = {
               name: payload.name,
-              emila: payload.email
+              email: payload.email
             }
-            context.commit('setUser', setUser)
+            const saveUser = {
+              uid: user.user.uid,
+              name: payload.name,
+              email: payload.email,
+              profile: payload.profile,
+              date: new Date().toISOString()
+            }
+            firebase.database().ref('users').push(saveUser)
+            .then((data) => {
+              context.commit('setUser', setUser)
+            })
+            .catch((error) => {
+              console.log(error)
+            })
           })
           .catch(error => {
             console.log(error)
@@ -74,6 +91,35 @@ export const store = new Vuex.Store({
         context.commit('setError', errorMessage)
       })
     },
+    userList (context) {
+      firebase.database().ref('users').once('value')
+      .then((data) => {
+        const users = []
+        const obj = data.val()
+        for (let key in obj) {
+          users.push({
+            name: obj[key].name,
+            profile: obj[key].profile
+          })
+        }
+        context.commit('userList', users)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+      // firebase.database().ref('users').once('value')
+      // .then((data) => {
+      //   const obj = data.val()
+      //   console.log(obj)
+      //   for (let key in obj) {
+      //     console.log(key)
+      //     console.log(obj[key])
+      //   }
+      // })
+      // .catch((error) => {
+      //   console.log(error)
+      // })
+    },
     setUser (context, payload) {
       const setUser = {
         name: payload.name,
@@ -93,6 +139,9 @@ export const store = new Vuex.Store({
     }
   },
   getters: {
+    userList (state) {
+      return state.userList
+    },
     user (state) {
       return state.user
     },
