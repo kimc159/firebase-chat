@@ -9,11 +9,29 @@ export const store = new Vuex.Store({
     user: '',
     userList: '',
     chatRoomIn: false,
+    roomId: '',
+    roomTitle: '',
+    roomUsers: '',
+    chatRoomList: '',
+    messageList: '',
     error: null
   },
   mutations: {
     userList (state, payload) {
       state.userList = payload
+    },
+    chatRoomInfo (state, payload) {
+      state.roomId = payload.roomId
+      state.roomTitle = payload.roomTitle
+    },
+    roomUsers (state, payload) {
+      state.roomUsers = payload
+    },
+    chatRoomList (state, payload) {
+      state.chatRoomList = payload
+    },
+    loadMessageList (state, payload) {
+      state.messageList = payload
     },
     chatRoomIn (state, payload) {
       state.chatRoomIn = payload
@@ -96,6 +114,8 @@ export const store = new Vuex.Store({
       })
     },
     userList (context) {
+      const userRef = firebase.database().ref('users')
+      userRef.off()
       firebase.database().ref('users').once('value')
       .then((data) => {
         const users = []
@@ -112,18 +132,90 @@ export const store = new Vuex.Store({
       .catch((error) => {
         console.log(error)
       })
-      // firebase.database().ref('users').once('value')
-      // .then((data) => {
-      //   const obj = data.val()
-      //   console.log(obj)
-      //   for (let key in obj) {
-      //     console.log(key)
-      //     console.log(obj[key])
-      //   }
-      // })
-      // .catch((error) => {
-      //   console.log(error)
-      // })
+    },
+    chatRoomInfo (context, payload) {
+      const roomInfo = {
+        roomId: payload.roomId,
+        roomTitle: payload.roomTitle
+      }
+      context.commit('chatRoomInfo', roomInfo)
+    },
+    createChatRoom (context, payload) {
+      const roomId = payload.roomId
+      const roominfo = {
+        userUid: payload.userUid,
+        Message: payload.Message,
+        profileImg: payload.profileImg,
+        timestamp: payload.timestamp,
+        userName: payload.userName
+      }
+      firebase.database().ref('Message/' + roomId).once('value')
+      .then(data => {
+        if (data.val() === null) {
+          firebase.database().ref('Message/' + roomId).push(roominfo)
+          .then((data) => {
+            console.log('방생성 성공')
+          })
+          .catch((error) => {
+            console.log('방생성 실패 ' + error)
+          })
+        } else {
+          console.log('방생성 실패')
+          return false
+        }
+      })
+    },
+    roomUsers (context, payload) {
+      const users = {
+        roomId: payload.roomId,
+        currentUser: payload.currentUser,
+        targetUserUid: payload.targetUserUid,
+        targetUserName: payload.targetUserName
+      }
+      firebase.database().ref('roomUsers/' + users.roomId).once('value')
+      .then(data => {
+        if (data.val() === null) {
+          firebase.database().ref('roomUsers/' + users.roomId).push(users)
+          .then(data => {
+            console.log(data.val())
+            context.commit('roomUsers', users)
+          })
+          .catch(error => {
+            console.log(error)
+          })
+        }
+      })
+    },
+    messageList (context, payload) {
+      console.log('message List in')
+      const roomId = payload
+      console.log(payload)
+      firebase.database().ref('Message/' + roomId).on('child_added', function (data) {
+        console.log(data)
+        console.log(data.val())
+        console.log(data.val().text)
+      })
+    },
+    chatRoomList (context, paylad) {
+      const chatUserList = []
+      firebase.database().ref('roomUsers').on('child_added', function (data) {
+        const obj = data.val()
+        console.log(obj)
+        for (let key in obj) {
+          chatUserList.push({
+            roomId: obj[key].roomId,
+            targetUserName: obj[key].targetUserName})
+        }
+        context.commit('chatRoomList', chatUserList)
+      })
+    },
+    loadMessageList (context, payload) {
+      const roomId = payload
+      const roomMessage = []
+      firebase.database().ref('Message/' + roomId).on('child_added', function (data) {
+        roomMessage.push(data.val().Message)
+      })
+      context.commit('loadMessageList', roomMessage)
     },
     chatRoomIn (context, payload) {
       context.commit('chatRoomIn', payload)
@@ -149,6 +241,15 @@ export const store = new Vuex.Store({
   getters: {
     userList (state) {
       return state.userList
+    },
+    chatRoomInfo (state) {
+      return state.roomId + '-' + state.roomTitle
+    },
+    chatRoomList (state) {
+      return state.chatRoomList
+    },
+    loadMessageList (state) {
+      return state.messageList
     },
     chatRoomIn (state) {
       return state.chatRoomIn
