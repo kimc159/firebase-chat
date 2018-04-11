@@ -4,12 +4,12 @@
     <v-card>
       <v-list subheader>
         <v-subheader>Recent chat</v-subheader>
-        <v-list-tile avatar v-for="item in items" :key="item.title">
+        <v-list-tile avatar v-for="item in chatRoomList" :key="item.roomId" @click="roomEnter(item.roomId, item.targetUserName)">
           <v-list-tile-avatar>
-            <img :src="item.avatar">
+            <img src="/static/image/noprofile.png">
           </v-list-tile-avatar>
           <v-list-tile-content>
-            <v-list-tile-title v-html="item.title"></v-list-tile-title>
+            <v-list-tile-title v-html="item.targetUserName"></v-list-tile-title>
           </v-list-tile-content>
           <v-list-tile-action>
             <v-icon :color="item.active ? 'teal' : 'grey'">chat_bubble</v-icon>
@@ -46,6 +46,22 @@ export default {
       items2: [
         { title: 'Travis Howard', avatar: '/static/image/test_image.jpg' }
       ]
+    }
+  },
+  created () {
+    this.$store.dispatch('chatRoomList')
+  },
+  computed: {
+    chatRoomList () {
+      return this.$store.getters.chatRoomList
+    }
+  },
+  methods: {
+    roomEnter (roomId, roomTitle) {
+      this.$store.dispatch('loadMessageList', roomId)
+      this.$store.dispatch('chatRoomIn', true)
+      this.$store.dispatch('chatRoomInfo', {roomId: roomId, roomTitle: roomTitle + '님'})
+      this.$router.push('/chatroom')
     }
   }
 }
