@@ -29,12 +29,13 @@ export default {
       roomTitle: '',
       roomUserList: '',
       roomUserName: '',
+      targetUserName: '',
       roomId: '',
       idOpenRoom: false,
       date: new Date()
     }
   },
-  mounted () {
+  created () {
     this.$store.dispatch('userList')
   },
   computed: {
@@ -45,19 +46,37 @@ export default {
   methods: {
     onUserListClick (event) {
       const targetUserUid = event.currentTarget.childNodes[0].getAttribute('data-uid')
-      const targetUserName = event.target.innerText
-      this.roomTitle = targetUserName + '님'
+      this.targetUserName = event.target.innerText
       const currentUserUid = this.auth.currentUser.uid
       const currentUserName = this.auth.currentUser.displayName
+      this.roomTitle = this.targetUserName + '님'
       this.roomUserList = [targetUserUid, currentUserUid]
-      this.roomUserName = [targetUserName, currentUserName]
-      this.roomId = this.MAKEID_CHAR + currentUserUid + this.DATETIME_CHAR + this.date
-      this.openChatRoom(this.roomId, this.roomTitle)
+      this.roomUserName = [this.targetUserName, currentUserName]
+      this.roomId = this.MAKEID_CHAR + currentUserUid + this.MAKEID_CHAR + targetUserUid
+      this.openChatRoom(this.roomId, this.roomTitle, targetUserUid)
     },
-    openChatRoom (roomId, roomTitle) {
+    openChatRoom (roomId, roomTitle, targetUserUid) {
+      const roomInfo = {
+        roomId: this.roomId,
+        userUid: this.auth.currentUser.uid,
+        Message: '방을 생성했습니다.',
+        profileImg: '/static/image/noprofile.png',
+        timestamp: this.date,
+        userName: this.auth.currentUser.displayName
+      }
+      const users = {
+        roomId: this.roomId,
+        currentUser: this.auth.currentUser.uid,
+        targetUserUid: targetUserUid,
+        targetUserName: this.targetUserName
+      }
+      console.log(roomInfo)
       this.isOpenRoom = true
       this.$store.dispatch('chatRoomIn', true)
-      this.$router.push('room/' + roomId + '-' + roomTitle)
+      this.$store.dispatch('createChatRoom', roomInfo)
+      this.$store.dispatch('roomUsers', users)
+      this.$store.dispatch('chatRoomInfo', {roomId: roomId, roomTitle: roomTitle})
+      this.$router.push('/chatroom')
     }
   }
 }
