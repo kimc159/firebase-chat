@@ -152,9 +152,25 @@ export const store = new Vuex.Store({
         timestamp: payload.timestamp,
         userName: payload.userName
       }
-      firebase.database().ref('Message/' + roomId).once('value')
+      const check = payload.MAKEID_CHAR + payload.userUid + payload.MAKEID_CHAR + payload.targetUid
+      const check2 = payload.MAKEID_CHAR + payload.targetUid + payload.MAKEID_CHAR + payload.userUid
+      let count = 0
+      firebase.database().ref('Message').once('value')
       .then(data => {
-        if (data.val() === null) {
+        console.log(data.val())
+        const obj = data.val()
+        console.log(check)
+        for (let key in obj) {
+          console.log(key.match(check))
+          if (key.match(check) || key.match(check2)) {
+            count++
+          }
+        }
+        return count
+      })
+      .then(count => {
+        console.log(count)
+        if (count === 0) {
           firebase.database().ref('Message/' + roomId).push(roominfo)
           .then((data) => {
             console.log('방생성 성공')
@@ -163,8 +179,7 @@ export const store = new Vuex.Store({
             console.log('방생성 실패 ' + error)
           })
         } else {
-          console.log('방생성 실패')
-          return false
+          console.log('이미 방이 있습니다.')
         }
       })
     },

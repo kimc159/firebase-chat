@@ -57,8 +57,10 @@ export default {
     },
     openChatRoom (roomId, roomTitle, targetUserUid) {
       const roomInfo = {
+        MAKEID_CHAR: this.MAKEID_CHAR,
         roomId: this.roomId,
         userUid: this.auth.currentUser.uid,
+        targetUid: targetUserUid,
         Message: '방을 생성했습니다.',
         profileImg: '/static/image/noprofile.png',
         timestamp: this.date,
