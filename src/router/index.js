@@ -37,8 +37,7 @@ export default new Router({
       component: Signup
     },
     {
-      path: '/room/:id',
-      props: true,
+      path: '/ChatRoom',
       name: 'ChatRoom',
       component: ChatRoom
     }
