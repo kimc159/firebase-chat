@@ -25,14 +25,33 @@
 </template>
 
 <script>
+import * as firebase from 'firebase'
 
 export default {
   data () {
     return {
+      auth: firebase.auth(),
       userIsAuth: false
     }
   },
   name: 'App',
+  mounted () {
+    console.log(this.userIsAuth)
+    const currentUser = []
+    this.auth.onAuthStateChanged(function (user) {
+      if (user) {
+        currentUser.push({
+          name: user.displayName,
+          email: user.email
+        })
+        console.log('user 로그인 : ', JSON.stringify(user))
+      } else {
+        console.log('로그아웃')
+      }
+    })
+    console.log(currentUser)
+    this.$store.dispatch('setUser', currentUser)
+  },
   methods: {
   },
   computed: {

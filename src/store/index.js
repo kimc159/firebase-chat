@@ -61,59 +61,62 @@ export const store = new Vuex.Store({
       })
     },
     signup (context, payload) {
-      firebase.auth().createUserAndRetrieveDataWithEmailAndPassword(payload.email, payload.password)
-      .then((user) => {
-        const nameUpdate = function () {
-          firebase.auth().currentUser.updateProfile({
-            displayName: payload.name
-          })
-          .then(() => {
-            console.log('displayName update success')
-            const setUser = {
-              name: payload.name,
-              email: payload.email
-            }
-            const saveUser = {
-              uid: user.user.uid,
-              name: payload.name,
-              email: payload.email,
-              profile: payload.profile,
-              date: new Date().toISOString()
-            }
-            firebase.database().ref('users').push(saveUser)
-            .then((data) => {
-              context.commit('setUser', setUser)
+      firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
+      .then(function () {
+        return firebase.auth().createUserAndRetrieveDataWithEmailAndPassword(payload.email, payload.password)
+        .then((user) => {
+          const nameUpdate = function () {
+            firebase.auth().currentUser.updateProfile({
+              displayName: payload.name
             })
-            .catch((error) => {
+            .then(() => {
+              console.log('displayName update success')
+              const setUser = {
+                name: payload.name,
+                email: payload.email
+              }
+              const saveUser = {
+                uid: user.user.uid,
+                name: payload.name,
+                email: payload.email,
+                profile: payload.profile,
+                date: new Date().toISOString()
+              }
+              firebase.database().ref('users').push(saveUser)
+              .then((data) => {
+                context.commit('setUser', setUser)
+              })
+              .catch((error) => {
+                console.log(error)
+              })
+            })
+            .catch(error => {
               console.log(error)
             })
-          })
-          .catch(error => {
-            console.log(error)
-          })
-        }
-        nameUpdate()
-      })
-      .catch((error) => {
-        console.log('가입 실패')
-        console.log('error : ' + error)
-        context.commit('setUser', null)
-        let errorMessage
-        switch (error.code) {
-          case 'auth/email-already-in-use':
-            errorMessage = '이미 사용중인 이메일 입니다.'
-            break
-          case 'auth/invalid-email':
-            errorMessage = '유효하지 않은 메일입니다'
-            break
-          case 'auth/operation-not-allowed':
-            errorMessage = '이메일 가입이 중지되었습니다.'
-            break
-          case 'auth/weak-password':
-            errorMessage = '비밀번호는 6자리 이상 필요합니다'
-            break
-        }
-        context.commit('setError', errorMessage)
+          }
+          nameUpdate()
+        })
+        .catch((error) => {
+          console.log('가입 실패')
+          console.log('error : ' + error)
+          context.commit('setUser', null)
+          let errorMessage
+          switch (error.code) {
+            case 'auth/email-already-in-use':
+              errorMessage = '이미 사용중인 이메일 입니다.'
+              break
+            case 'auth/invalid-email':
+              errorMessage = '유효하지 않은 메일입니다'
+              break
+            case 'auth/operation-not-allowed':
+              errorMessage = '이메일 가입이 중지되었습니다.'
+              break
+            case 'auth/weak-password':
+              errorMessage = '비밀번호는 6자리 이상 필요합니다'
+              break
+          }
+          context.commit('setError', errorMessage)
+        })
       })
     },
     userList (context) {
@@ -162,6 +165,7 @@ export const store = new Vuex.Store({
         console.log(check)
         for (let key in obj) {
           console.log(key.match(check))
+          console.log(key)
           if (key.match(check) || key.match(check2)) {
             count++
           }
