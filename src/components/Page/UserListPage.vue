@@ -66,9 +66,8 @@ export default {
       }
       const users = {
         roomId: this.roomId,
-        currentUser: this.auth.currentUser.uid,
-        targetUserUid: targetUserUid,
-        targetUserName: this.targetUserName
+        roomUserUid: [targetUserUid, this.auth.currentUser.uid],
+        roomUserName: [this.targetUserName, this.auth.currentUser.displayName]
       }
       console.log(roomInfo)
       this.isOpenRoom = true

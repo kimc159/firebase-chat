@@ -4,12 +4,12 @@
     <v-card>
       <v-list subheader>
         <v-subheader>Recent chat</v-subheader>
-        <v-list-tile avatar v-for="item in chatRoomList" :key="item.roomId" @click="roomEnter(item.roomId, item.targetUserName)">
+        <v-list-tile avatar v-for="item in roomUserName" :key="item.roomId" @click="roomEnter(item.roomId, item)">
           <v-list-tile-avatar>
             <img src="/static/image/noprofile.png">
           </v-list-tile-avatar>
           <v-list-tile-content>
-            <v-list-tile-title v-html="item.targetUserName"></v-list-tile-title>
+            <v-list-tile-title v-html="item"></v-list-tile-title>
           </v-list-tile-content>
           <v-list-tile-action>
             <v-icon :color="item.active ? 'teal' : 'grey'">chat_bubble</v-icon>
@@ -37,12 +37,6 @@
 export default {
   data () {
     return {
-      items: [
-        { active: true, title: 'Jason Oner', avatar: '/static/image/test_image.jpg' },
-        { active: true, title: 'Ranee Carlson', avatar: '/static/image/test_image2.jpg' },
-        { title: 'Cindy Baker', avatar: '/static/image/test_image.jpg' },
-        { title: 'Ali Connors', avatar: '/static/image/test_image.jpg' }
-      ],
       items2: [
         { title: 'Travis Howard', avatar: '/static/image/test_image.jpg' }
       ]
@@ -52,8 +46,8 @@ export default {
     this.$store.dispatch('chatRoomList')
   },
   computed: {
-    chatRoomList () {
-      return this.$store.getters.chatRoomList
+    roomUserName () {
+      return this.$store.getters.roomUserName
     }
   },
   methods: {

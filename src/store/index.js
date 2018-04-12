@@ -13,6 +13,7 @@ export const store = new Vuex.Store({
     roomTitle: '',
     roomUsers: '',
     chatRoomList: '',
+    roomUserName: '',
     messageList: '',
     error: null
   },
@@ -28,7 +29,9 @@ export const store = new Vuex.Store({
       state.roomUsers = payload
     },
     chatRoomList (state, payload) {
-      state.chatRoomList = payload
+      const roomUserName = payload.split(' ')
+      roomUserName.pop()
+      state.roomUserName = roomUserName
     },
     loadMessageList (state, payload) {
       state.messageList = payload
@@ -168,9 +171,8 @@ export const store = new Vuex.Store({
     roomUsers (context, payload) {
       const users = {
         roomId: payload.roomId,
-        currentUser: payload.currentUser,
-        targetUserUid: payload.targetUserUid,
-        targetUserName: payload.targetUserName
+        roomUserUid: payload.roomUserUid,
+        roomUserName: payload.roomUserName
       }
       firebase.database().ref('roomUsers/' + users.roomId).once('value')
       .then(data => {
@@ -197,15 +199,25 @@ export const store = new Vuex.Store({
       })
     },
     chatRoomList (context, paylad) {
-      const chatUserList = []
+      let chatUserList = ''
+      let count = 0
       firebase.database().ref('roomUsers').on('child_added', function (data) {
         const obj = data.val()
         console.log(obj)
+        const currentUserName = firebase.auth().currentUser.displayName
+
         for (let key in obj) {
-          chatUserList.push({
-            roomId: obj[key].roomId,
-            targetUserName: obj[key].targetUserName})
+          obj[key].roomUserName.map(function (v, i) {
+            console.log(v)
+            if (currentUserName === v && count < 1) {
+              chatUserList += obj[key].roomUserName + ' '
+              count++
+            } else {
+              count = 0
+            }
+          })
         }
+        console.log(chatUserList)
         context.commit('chatRoomList', chatUserList)
       })
     },
@@ -247,6 +259,9 @@ export const store = new Vuex.Store({
     },
     chatRoomList (state) {
       return state.chatRoomList
+    },
+    roomUserName (state) {
+      return state.roomUserName
     },
     loadMessageList (state) {
       return state.messageList
