@@ -76,6 +76,7 @@ export default {
       this.$store.dispatch('chatRoomIn', true)
       this.$store.dispatch('createChatRoom', roomInfo)
       this.$store.dispatch('roomUsers', users)
+      this.$store.dispatch('loadMessageList', users.roomId)
       this.$store.dispatch('chatRoomInfo', {roomId: roomId, roomTitle: roomTitle})
       this.$router.push('/chatroom')
     }

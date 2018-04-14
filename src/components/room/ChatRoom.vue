@@ -11,7 +11,7 @@
         <v-list subheader>
         <v-list-tile-content>
           <ul id="messageList">
-            <li v-for="list in loadMessageList" :key="list.Message">{{list}}</li>
+            <li v-for="list in loadMessageList" :key="list.messageList">{{list}}</li>
           </ul>
         </v-list-tile-content>
         </v-list>
@@ -46,7 +46,6 @@ export default {
     }
   },
   mounted () {
-    this.roomId = this.chatRoomInfo.split('-')[0]
     this.roomTitle = this.chatRoomInfo.split('-')[1]
     console.log(this.roomId)
     document.getElementById('roomTitle').textContent = this.roomTitle
@@ -54,6 +53,9 @@ export default {
   computed: {
     chatRoomInfo () {
       return this.$store.getters.chatRoomInfo
+    },
+    roomId () {
+      return this.$store.getters.roomId
     },
     loadMessageList () {
       console.log(this.$store.getters.loadMessageList)

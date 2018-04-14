@@ -29,9 +29,13 @@ export const store = new Vuex.Store({
       state.roomUsers = payload
     },
     chatRoomList (state, payload) {
-      const roomUserName = payload.split(' ')
+      console.log(payload)
+      const roomUserName = payload.chatUserList.split(' ')
+      const roomIdList = payload.chatRoomIdList.split(' ')
       roomUserName.pop()
+      roomIdList.pop()
       state.roomUserName = roomUserName
+      state.roomId = roomIdList
     },
     loadMessageList (state, payload) {
       state.messageList = payload
@@ -217,8 +221,9 @@ export const store = new Vuex.Store({
         console.log(data.val().text)
       })
     },
-    chatRoomList (context, paylad) {
+    chatRoomList (context) {
       let chatUserList = ''
+      let chatRoomIdList = ''
       let count = 0
       firebase.database().ref('roomUsers').on('child_added', function (data) {
         const obj = data.val()
@@ -230,6 +235,7 @@ export const store = new Vuex.Store({
             console.log(v)
             if (currentUserName === v && count < 1) {
               chatUserList += obj[key].roomUserName + ' '
+              chatRoomIdList += obj[key].roomId + ' '
               count++
             } else {
               count = 0
@@ -237,7 +243,8 @@ export const store = new Vuex.Store({
           })
         }
         console.log(chatUserList)
-        context.commit('chatRoomList', chatUserList)
+        console.log(chatRoomIdList)
+        context.commit('chatRoomList', {chatUserList, chatRoomIdList})
       })
     },
     loadMessageList (context, payload) {
@@ -246,6 +253,7 @@ export const store = new Vuex.Store({
       firebase.database().ref('Message/' + roomId).on('child_added', function (data) {
         roomMessage.push(data.val().Message)
       })
+      console.log(roomMessage)
       context.commit('loadMessageList', roomMessage)
     },
     chatRoomIn (context, payload) {
@@ -287,6 +295,9 @@ export const store = new Vuex.Store({
     },
     chatRoomIn (state) {
       return state.chatRoomIn
+    },
+    roomId (state) {
+      return state.roomId
     },
     user (state) {
       return state.user

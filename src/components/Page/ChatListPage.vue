@@ -4,7 +4,7 @@
     <v-card>
       <v-list subheader>
         <v-subheader>Recent chat</v-subheader>
-        <v-list-tile avatar v-for="item in roomUserName" :key="item.roomId" @click="roomEnter(item.roomId, item)">
+        <v-list-tile avatar v-for="(item,index) in roomUserName" :key="item.roomId" @click="roomEnter(index, item)">
           <v-list-tile-avatar>
             <img src="/static/image/noprofile.png">
           </v-list-tile-avatar>
@@ -37,6 +37,7 @@
 export default {
   data () {
     return {
+      roomid: '',
       items2: [
         { title: 'Travis Howard', avatar: '/static/image/test_image.jpg' }
       ]
@@ -44,6 +45,7 @@ export default {
   },
   created () {
     this.$store.dispatch('chatRoomList')
+    this.roomId = this.$store.getters.roomId
   },
   computed: {
     roomUserName () {
@@ -51,8 +53,9 @@ export default {
     }
   },
   methods: {
-    roomEnter (roomId, roomTitle) {
-      this.$store.dispatch('loadMessageList', roomId)
+    roomEnter (index, roomTitle) {
+      const roomId = this.roomId
+      this.$store.dispatch('loadMessageList', roomId[index])
       this.$store.dispatch('chatRoomIn', true)
       this.$store.dispatch('chatRoomInfo', {roomId: roomId, roomTitle: roomTitle + '님'})
       this.$router.push('/chatroom')

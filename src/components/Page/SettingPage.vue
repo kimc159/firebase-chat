@@ -91,7 +91,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .list--two-line .list__tile {
   height: 50px;
 }
@@ -108,7 +108,7 @@ export default {
   }
   .card {
     width: 100%;
-    height: 100% !important;
+    height: 500px !important;
   }
   .list {
     width: 100%;
