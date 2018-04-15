@@ -1,5 +1,5 @@
 <template>
-  <v-layout row>
+  <v-layout row class="settingListWrap">
     <v-flex xs12>
       <v-card>
         <v-list two-line subheader>
@@ -18,7 +18,6 @@
             </v-list-tile-action>
           </v-list-tile>
           <v-divider inset></v-divider>
-          <v-subheader inset></v-subheader>
           <v-list-tile v-for="item in items2" :key="item.title" avatar>
             <v-list-tile-avatar>
               <v-icon :class="[item.iconClass]">{{ item.icon }}</v-icon>
@@ -92,6 +91,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+#app > div > main > div .settingListWrap {
+  margin-top: 50px;
+}
 .list--two-line .list__tile {
   height: 50px;
 }

@@ -29,7 +29,6 @@ export const store = new Vuex.Store({
       state.roomUsers = payload
     },
     chatRoomList (state, payload) {
-      console.log(payload)
       const roomUserName = payload.chatUserList.split(' ')
       const roomIdList = payload.chatRoomIdList.split(' ')
       roomUserName.pop()
@@ -39,6 +38,9 @@ export const store = new Vuex.Store({
     },
     loadMessageList (state, payload) {
       state.messageList = payload
+    },
+    roomId (state, payload) {
+      state.roomId = payload
     },
     chatRoomIn (state, payload) {
       state.chatRoomIn = payload
@@ -164,12 +166,9 @@ export const store = new Vuex.Store({
       let count = 0
       firebase.database().ref('Message').once('value')
       .then(data => {
-        console.log(data.val())
         const obj = data.val()
         console.log(check)
         for (let key in obj) {
-          console.log(key.match(check))
-          console.log(key)
           if (key.match(check) || key.match(check2)) {
             count++
           }
@@ -177,7 +176,6 @@ export const store = new Vuex.Store({
         return count
       })
       .then(count => {
-        console.log(count)
         if (count === 0) {
           firebase.database().ref('Message/' + roomId).push(roominfo)
           .then((data) => {
@@ -202,7 +200,6 @@ export const store = new Vuex.Store({
         if (data.val() === null) {
           firebase.database().ref('roomUsers/' + users.roomId).push(users)
           .then(data => {
-            console.log(data.val())
             context.commit('roomUsers', users)
           })
           .catch(error => {
@@ -214,25 +211,18 @@ export const store = new Vuex.Store({
     messageList (context, payload) {
       console.log('message List in')
       const roomId = payload
-      console.log(payload)
       firebase.database().ref('Message/' + roomId).on('child_added', function (data) {
-        console.log(data)
-        console.log(data.val())
-        console.log(data.val().text)
       })
     },
     chatRoomList (context) {
       let chatUserList = ''
       let chatRoomIdList = ''
       let count = 0
+      const currentUserName = firebase.auth().currentUser.displayName
       firebase.database().ref('roomUsers').on('child_added', function (data) {
         const obj = data.val()
-        console.log(obj)
-        const currentUserName = firebase.auth().currentUser.displayName
-
         for (let key in obj) {
           obj[key].roomUserName.map(function (v, i) {
-            console.log(v)
             if (currentUserName === v && count < 1) {
               chatUserList += obj[key].roomUserName + ' '
               chatRoomIdList += obj[key].roomId + ' '
@@ -242,22 +232,23 @@ export const store = new Vuex.Store({
             }
           })
         }
-        console.log(chatUserList)
-        console.log(chatRoomIdList)
         context.commit('chatRoomList', {chatUserList, chatRoomIdList})
       })
     },
     loadMessageList (context, payload) {
       const roomId = payload
-      const roomMessage = []
+      let roomMessage = []
       firebase.database().ref('Message/' + roomId).on('child_added', function (data) {
-        roomMessage.push(data.val().Message)
+        roomMessage.push(data.val())
       })
       console.log(roomMessage)
       context.commit('loadMessageList', roomMessage)
     },
     chatRoomIn (context, payload) {
       context.commit('chatRoomIn', payload)
+    },
+    roomId (context, payload) {
+      context.commit('roomId', payload)
     },
     setUser (context, payload) {
       const setUser = {

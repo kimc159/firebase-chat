@@ -11,7 +11,7 @@
         <v-list subheader>
         <v-list-tile-content>
           <ul id="messageList">
-            <li v-for="list in loadMessageList" :key="list.messageList">{{list}}</li>
+            <li v-for="list in loadMessageList" :key="list.id" :data-uid="list.userUid">{{list.userName}} : {{list.Message}}</li>
           </ul>
         </v-list-tile-content>
         </v-list>
@@ -42,24 +42,42 @@ export default {
       sendMessage: '',
       roomId: '',
       roomTitle: '',
-      messageRef: ''
+      messageRef: '',
+      li: '',
+      curLiUid: []
     }
   },
   mounted () {
     this.roomTitle = this.chatRoomInfo.split('-')[1]
-    console.log(this.roomId)
+    this.roomId = this.$store.getters.roomId
     document.getElementById('roomTitle').textContent = this.roomTitle
+    this.li = document.querySelectorAll('#messageList > li')
+    const li = this.li
+    for (let i in li) {
+      if (li[i].getAttribute('data-uid') === this.auth.currentUser.uid) {
+        li[i].className = 'myMessage'
+        console.log('same')
+      }
+    }
+  },
+  updated () {
+    const curLi = document.querySelectorAll('#messageList > li')
+    if (this.li.length !== curLi.length) {
+      for (let i in curLi) {
+        this.curLiUid.push(curLi[i].getAttribute('data-uid'))
+        if (this.curLiUid[i] === this.auth.currentUser.uid) {
+          curLi[i].className += ' ' + 'myMessage'
+        }
+      }
+    }
   },
   computed: {
     chatRoomInfo () {
       return this.$store.getters.chatRoomInfo
     },
-    roomId () {
-      return this.$store.getters.roomId
-    },
     loadMessageList () {
-      console.log(this.$store.getters.loadMessageList)
-      return this.$store.getters.loadMessageList
+      const data = this.$store.getters.loadMessageList
+      return data
     }
   },
   methods: {
@@ -91,6 +109,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+  .myMessage {
+    text-align: right;
+    padding-right: 10px;
+  }
   .content .layout {
     height: 100%;
     .flex {
@@ -116,6 +139,13 @@ export default {
       ul {
         width: 100%;
         height: 100%;
+        margin-top: 10px;
+        clear: both;
+        display: block;
+        content: '';
+        li {
+          width: 100%;
+        }
       }
     }
   }

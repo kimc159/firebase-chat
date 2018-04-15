@@ -4,7 +4,7 @@
       <v-card>
         <v-list subheader>
           <v-subheader>친구</v-subheader>
-          <v-list-tile avatar v-for="item in items" :key="item.name" :data-uid="item.uid" @click="onUserListClick">
+          <v-list-tile avatar v-for="item in items" :key="item.uid" :data-uid="item.uid" @click="onUserListClick">
             <v-list-tile-avatar>
               <img :src="item.profile">
             </v-list-tile-avatar>

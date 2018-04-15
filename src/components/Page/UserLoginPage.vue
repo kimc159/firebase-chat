@@ -125,6 +125,9 @@ export default {
         this.$store.dispatch('setUser', setUser)
         this.$store.dispatch('setError', null)
       })
+      .catch(error => {
+        console.log(error)
+      })
     },
     signin () {
       const user = {

@@ -82,6 +82,11 @@ export default {
       padding: 10px;
     }
   }
+  .btn_wrap {
+    button, a {
+      margin: auto;
+    }
+  }
   .tabs {
     position: fixed;
     left: 0;

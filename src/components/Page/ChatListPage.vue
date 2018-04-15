@@ -1,5 +1,5 @@
 <template>
-<v-layout row>
+<v-layout row class="chatListWrap">
   <v-flex xs12 sm6 offset-sm3>
     <v-card>
       <v-list subheader>
@@ -58,6 +58,7 @@ export default {
       this.$store.dispatch('loadMessageList', roomId[index])
       this.$store.dispatch('chatRoomIn', true)
       this.$store.dispatch('chatRoomInfo', {roomId: roomId, roomTitle: roomTitle + '님'})
+      this.$store.dispatch('roomId', roomId[index])
       this.$router.push('/chatroom')
     }
   }
@@ -65,5 +66,7 @@ export default {
 </script>
 
 <style>
-
+#app > div > main > div .chatListWrap {
+  margin-top: 50px;
+}
 </style>
