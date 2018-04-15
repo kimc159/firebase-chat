@@ -88,7 +88,7 @@ export default {
     }
   }
   .tabs {
-    position: fixed;
+    position: fixed !important;
     left: 0;
     bottom: 0;
     width: 100%;
