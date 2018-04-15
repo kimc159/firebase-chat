@@ -258,8 +258,12 @@ export const store = new Vuex.Store({
       context.commit('setUser', setUser)
     },
     signout (context) {
+      const setUser = {
+        name: null,
+        email: null
+      }
       firebase.auth().signOut()
-      context.commit('setUser', null)
+      context.commit('setUser', setUser)
     },
     setError (context, payload) {
       context.commit('setError', payload)

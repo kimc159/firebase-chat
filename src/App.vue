@@ -36,7 +36,7 @@ export default {
   },
   name: 'App',
   mounted () {
-    console.log(this.userIsAuth)
+    console.log(this.$store.getters.user)
     const currentUser = []
     this.auth.onAuthStateChanged(function (user) {
       if (user) {
@@ -56,7 +56,12 @@ export default {
   },
   computed: {
     user () {
-      return this.$store.getters.user
+      const user = this.$store.getters.user
+      console.log('user : ' + user.email)
+      if (user.email === undefined || user.email === null) {
+        return false
+      }
+      return true
     },
     chatRoomIn () {
       return this.$store.getters.chatRoomIn

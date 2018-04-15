@@ -89,8 +89,8 @@ export default {
   },
   watch: {
     user (value) {
-      if (value !== null && value !== undefined) {
-        console.log(value)
+      if (value.email !== null && value.email !== undefined) {
+        console.log(value.email)
         this.$router.push('/chatlist')
       }
     }

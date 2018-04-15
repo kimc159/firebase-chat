@@ -85,6 +85,7 @@ export default {
       console.log('signout')
       alert('로그아웃 되었습니다.')
       this.$store.dispatch('signout')
+      this.$router.push('/')
     }
   }
 }
