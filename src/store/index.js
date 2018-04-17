@@ -237,6 +237,7 @@ export const store = new Vuex.Store({
     },
     loadMessageList (context, payload) {
       const roomId = payload
+      console.log(roomId)
       let roomMessage = []
       firebase.database().ref('Message/' + roomId).on('child_added', function (data) {
         roomMessage.push(data.val())
