@@ -82,6 +82,10 @@ export default {
     position: absolute;
     width: 100%;
     height: 100%;
+    padding: 57px 0 70px;
+    .content--wrap {
+      overflow-y: auto;
+    }
     .subheader {
       padding: 10px;
     }
