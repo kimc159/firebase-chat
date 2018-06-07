@@ -92,8 +92,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#app > div > main > div .settingListWrap {
-  margin-top: 50px;
+.content {
+  padding: 57px 0 75px;
+  .content--wrap {
+    overflow-y: auto;
+  }
 }
 .list--two-line .list__tile {
   height: 50px;

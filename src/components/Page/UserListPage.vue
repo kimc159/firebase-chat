@@ -87,7 +87,6 @@ export default {
 <style lang="scss" scoped>
   .content .layout {
     height: 100%;
-    margin-top: 56px;
     .flex {
       height: 100%;
     }

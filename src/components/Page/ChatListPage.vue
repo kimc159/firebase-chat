@@ -55,7 +55,4 @@ export default {
 </script>
 
 <style>
-#app > div > main > div .chatListWrap {
-  margin-top: 50px;
-}
 </style>

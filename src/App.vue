@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-toolbar class="text-xs-center" dark color="teal lighten-3" v-if="user && !chatRoomIn">
+    <v-toolbar class="text-xs-center top_title" dark color="teal lighten-3" v-if="user && !chatRoomIn">
       <v-toolbar-title class="white--text">firebase chat</v-toolbar-title>
     </v-toolbar>
     <v-content>
@@ -71,8 +71,7 @@ export default {
 </script>
 
 <style lang="scss">
-  .toolbar {
-    position: absolute;
+  .top_title {
     top: 0;
     z-index: 10;
   }
