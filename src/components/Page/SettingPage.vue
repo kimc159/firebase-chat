@@ -114,7 +114,7 @@ export default {
   }
   .card {
     width: 100%;
-    height: 500px !important;
+    height: 100%;
   }
   .list {
     width: 100%;

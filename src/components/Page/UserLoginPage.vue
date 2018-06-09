@@ -142,7 +142,7 @@ export default {
 
 <style lang="scss">
 .logo_wrap {
-  margin: 50px auto;
+  margin: 25px auto;
 }
 .logo_wrap .flex{
   text-align: center;

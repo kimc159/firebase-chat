@@ -82,9 +82,13 @@ export default {
     position: absolute;
     width: 100%;
     height: 100%;
-    padding: 57px 0 70px;
     .content--wrap {
+      height:100%;
+      padding: 57px 0 70px;
       overflow-y: auto;
+      .container {
+        height: 100%;
+      }
     }
     .subheader {
       padding: 10px;
