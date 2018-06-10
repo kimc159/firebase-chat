@@ -84,8 +84,7 @@ export default {
     height: 100%;
     .content--wrap {
       height:100%;
-      padding: 57px 0 70px;
-      overflow-y: auto;
+      padding: 57px 0 72px;
       .container {
         height: 100%;
       }
@@ -108,6 +107,10 @@ export default {
     .tabs__div {
       width: 50%;
     }
+  }
+  .list {
+    height: 100%;
+    overflow-y: auto;
   }
 </style>
 
